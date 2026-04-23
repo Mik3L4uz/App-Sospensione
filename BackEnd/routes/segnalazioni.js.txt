@@ -1,0 +1,36 @@
+const express = require("express");
+const router = express.Router();
+
+let segnalazioni = [];
+
+router.post("/", (req, res) => {
+  const { nome, cognome, scuola, descrizione } = req.body;
+
+  if (!scuola || !descrizione) {
+    return res.status(400).json({
+      errore: "Scuola e descrizione sono obbligatorie",
+    });
+  }
+
+  const nuovaSegnalazione = {
+    id: Date.now(),
+    nome: nome || "Anonimo",
+    cognome: cognome || "",
+    scuola,
+    descrizione,
+    data: new Date(),
+  };
+
+  segnalazioni.push(nuovaSegnalazione);
+
+  res.status(201).json({
+    messaggio: "Segnalazione inviata",
+    data: nuovaSegnalazione,
+  });
+});
+
+router.get("/", (req, res) => {
+  res.json(segnalazioni);
+});
+
+module.exports = router;
